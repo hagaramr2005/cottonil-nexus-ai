@@ -1,0 +1,58 @@
+name: Security and QA
+on:
+  push:
+  pull_request:
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r backend/requirements.txt pip-audit pytest
+      - run: PYTHONPATH=backend python -m pytest backend/tests -q
+      - run: pip-audit -r backend/requirements.txt
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run test
+      - run: npm run build
+      - run: npm audit --omit=dev --audit-level=high
+  browser-smoke:
+    needs: [backend, frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: pip install -r backend/requirements.txt pytest playwright
+      - run: python -m playwright install --with-deps chromium
+      - run: npm ci
+        working-directory: frontend
+      - name: Start data-free services
+        env:
+          NEXUS_AUTH_ENABLED: '1'
+          NEXUS_AUTH_SECRET: 'ci-test-only-not-for-production'
+          NEXUS_USERS: 'ci:ci-password:admin'
+          NEXUS_DB: /tmp/nexus-ci.sqlite
+        run: |
+          python -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000 > /tmp/nexus-api.log 2>&1 &
+          (cd frontend && npm run dev -- --host 127.0.0.1) > /tmp/nexus-web.log 2>&1 &
+          for attempt in $(seq 1 30); do curl -sf http://127.0.0.1:5173/ && curl -sf http://127.0.0.1:8000/api/health && break; sleep 1; done
+      - name: Browser smoke
+        run: python -m pytest e2e/test_release_smoke.py -q

@@ -1,0 +1,36 @@
+# Bind to localhost ONLY. TLS-terminating edge proxy is required before production use.
+services:
+  api:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.api
+    env_file:
+      - path: .env
+        format: raw  # preserve literal '$' in PBKDF2 password hashes; Compose >= 2.30
+    environment:
+      NEXUS_DB: /srv/nexus/data/nexus.sqlite
+      NEXUS_RAW: /srv/nexus/data/raw
+    volumes:
+      - ./data:/srv/nexus/data
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,size=64m
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+  web:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.web
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - '127.0.0.1:8080:80'
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL

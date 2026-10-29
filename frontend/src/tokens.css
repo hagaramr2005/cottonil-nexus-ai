@@ -1,0 +1,62 @@
+/* COTTONIL NEXUS AI V10 — design tokens.
+   MEASURED from the supplied logo: --c-brand (#003E8B dominant pixel color).
+   PROPOSED (design interpretation, not official brand spec): every other value. */
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/ibm-plex-sans-arabic/arabic-400.css';
+@import '@fontsource/ibm-plex-sans-arabic/arabic-500.css';
+@import '@fontsource/ibm-plex-sans-arabic/arabic-600.css';
+@import '@fontsource/ibm-plex-sans-arabic/arabic-700.css';
+
+:root{
+  /* brand */
+  --c-brand:#003E8B; --c-brand-hover:#00316F; --c-brand-ink:#0A2A55;
+  --c-brand-soft:#E7EFFA; --c-brand-wash:#F3F7FC;
+  --c-accent:#B7791F; --c-accent-soft:#FBF1DC;
+  /* surfaces & text */
+  --c-canvas:#F4F6FA; --c-surface:#FFFFFF; --c-surface-2:#F8FAFD;
+  --c-text:#0F1F38; --c-text-2:#4A5B74; --c-text-3:#53637B; --c-on-brand:#FFFFFF;
+  --c-border:#D9E1EC; --c-border-strong:#B9C6D8;
+  /* status */
+  --c-ok:#14705A; --c-ok-bg:#E3F4EE;
+  --c-warn:#8A5A00; --c-warn-bg:#FFF3D6;
+  --c-risk:#A4262C; --c-risk-bg:#FDEBEC;
+  --c-info:var(--c-brand); --c-info-bg:var(--c-brand-soft);
+  /* chart palette (muted, ordered) */
+  --chart-1:#003E8B; --chart-2:#4B82C8; --chart-3:#9DBBE3; --chart-4:#B7791F; --chart-5:#6B7A90; --chart-6:#2E8B73;
+  --chart-grid:#E3E9F2; --chart-axis:#5C6C84;
+  /* type */
+  --font-ar:'IBM Plex Sans Arabic','Segoe UI',Tahoma,sans-serif;
+  --font-en:'Inter','Segoe UI',Arial,sans-serif;
+  --fs-xs:.75rem; --fs-sm:.8125rem; --fs-md:.9375rem; --fs-lg:1.125rem; --fs-xl:1.5rem; --fs-2xl:2rem; --fs-hero:2.75rem;
+  --lh-body:1.65; --lh-tight:1.25;
+  /* space / radius / shadow / motion */
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px; --sp-6:32px; --sp-7:48px;
+  --r-sm:6px; --r-md:10px; --r-lg:14px;
+  --shadow-1:0 1px 2px rgba(10,42,85,.06),0 1px 3px rgba(10,42,85,.05);
+  --shadow-2:0 8px 28px rgba(10,42,85,.14);
+  --t-fast:120ms; --t-base:200ms; --ease:cubic-bezier(.2,.7,.2,1);
+  --sidebar-w:272px;
+}
+:root[lang='ar']{--font-main:var(--font-ar);--lh-body:1.8}
+:root[lang='en']{--font-main:var(--font-en)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* Premium semantic dark palette; all existing views inherit shared tokens. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --c-brand:#80B4FF; --c-brand-hover:#A8CDFF; --c-brand-ink:#E2EDFF;
+  --c-brand-soft:#173B68; --c-brand-wash:#142B48;
+  --c-accent:#E8AD57; --c-accent-soft:#3D301D;
+  --c-canvas:#0B1322; --c-surface:#121E30; --c-surface-2:#19283D;
+  --c-text:#F1F5FC; --c-text-2:#BECBE0; --c-text-3:#A3B4CF; --c-on-brand:#071A34;
+  --c-border:#32435C; --c-border-strong:#50627D;
+  --c-ok:#70E0B7; --c-ok-bg:#143B36;
+  --c-warn:#FFD17C; --c-warn-bg:#40301B;
+  --c-risk:#FFA2A8; --c-risk-bg:#461F2B;
+  --chart-1:#80B4FF; --chart-2:#59A9D9; --chart-3:#B6A5EF; --chart-4:#F0BE76; --chart-5:#A9B9D0; --chart-6:#72D4AF;
+  --chart-grid:#304158; --chart-axis:#C0CDE0;
+  --shadow-1:0 1px 3px rgba(0,0,0,.25);--shadow-2:0 8px 32px rgba(0,0,0,.38);
+}
